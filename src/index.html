@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-ink">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VÉRION — Maison de Cuir</title>
+  <meta name="description" content="VÉRION is a fictional Italian house of leather goods and tailoring. Autumn / Winter 2026.">
+  <meta name="theme-color" content="#000000">
+
+  <!-- ============ FONTS ============ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- ============ TAILWIND (CDN) + THEME ============ -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink:      { DEFAULT: '#000000', soft: '#0a0a0a', lift: '#111111' },
+            bone:     '#f5f2ed',
+            ash:      '#8a8a8a',
+            champagne:'#c9a96e'
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans:    ['Inter', 'system-ui', 'sans-serif']
+          },
+          transitionTimingFunction: {
+            'expo-out': 'cubic-bezier(0.16, 1, 0.3, 1)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <noscript><style>#preloader{display:none !important}</style></noscript>
+
+  <!-- ============ CUSTOM CSS (only what Tailwind can't do) ============ -->
+  <style>
+    :root { --expo: cubic-bezier(0.16, 1, 0.3, 1); }
+
+    /* Lenis */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-stopped { overflow: hidden; }
+
+    body { background:#000; color:#f5f2ed; overflow-x:hidden; }
+    ::selection { background:#c9a96e; color:#000; }
+    :focus-visible { outline:1px solid #c9a96e; outline-offset:6px; }
+
+    /* Small uppercase label */
+    .label { font-family:Inter,system-ui,sans-serif; font-size:10.5px; line-height:1.4; letter-spacing:.32em; text-transform:uppercase; font-weight:400; }
+
+    /* Film grain */
+    .grain {
+      position:fixed; inset:-50%; width:200%; height:200%; z-index:150; pointer-events:none; opacity:.075;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      animation:grain 1.1s steps(6) infinite;
+    }
+    @keyframes grain {
+      0%{transform:translate(0,0)} 20%{transform:translate(-4%,3%)} 40%{transform:translate(3%,-5%)}
+      60%{transform:translate(-5%,-2%)} 80%{transform:translate(4%,4%)} 100%{transform:translate(0,0)}
+    }
+
+    /* Editorial colour grade for every photograph */
+    .img-grade { filter:grayscale(20%) contrast(1.1) brightness(.85); }
+
+    /* Ken Burns */
+    @keyframes kb { from{transform:scale(1)} to{transform:scale(1.12) translate3d(-1.5%,-1%,0)} }
+    .kb-img { animation:kb 28s ease-in-out infinite alternate; transform-origin:60% 40%; }
+
+    /* Masked text reveal (split-text) */
+    .mask { display:inline-block; overflow:hidden; vertical-align:top; padding:.22em .02em; margin:-.22em -.02em; }
+    .word, .char { display:inline-block; will-change:transform; }
+
+    /* Underline that draws left → right */
+    .link-u { position:relative; display:inline-block; }
+    .link-u::after {
+      content:''; position:absolute; left:0; bottom:-6px; height:1px; width:100%;
+      background:currentColor; transform:scaleX(0); transform-origin:right;
+      transition:transform .9s var(--expo);
+    }
+    .link-u:hover::after, .link-u:focus-visible::after { transform:scaleX(1); transform-origin:left; }
+    .nav-group:hover .link-u:not(:hover) { opacity:.35; }
+    .link-u, .nav-group .link-u { transition:opacity .8s var(--expo); }
+
+    /* Outlined numerals */
+    .outline-num { color:transparent; -webkit-text-stroke:1px rgba(245,242,237,.32); }
+
+    /* Scroll indicator line */
+    .scroll-line { position:relative; width:1px; height:56px; overflow:hidden; background:rgba(245,242,237,.18); }
+    .scroll-line::after { content:''; position:absolute; inset:0; background:#f5f2ed; animation:scrollLine 2.6s cubic-bezier(.65,0,.35,1) infinite; }
+    @keyframes scrollLine { 0%{transform:translateY(-100%)} 50%{transform:translateY(0)} 100%{transform:translateY(100%)} }
+
+    /* Product hover: slide-in info, dim siblings */
+    .mask-s { display:block; overflow:hidden; padding-bottom:.12em; }
+    .slide { display:block; transform:translateY(115%); transition:transform 1.1s var(--expo); }
+    .slide.d2 { transition-delay:.06s; } .slide.d3 { transition-delay:.12s; }
+    .group:hover .slide, .group:focus-visible .slide { transform:translateY(0); }
+    .veil-bg { background:linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,0) 55%); opacity:0; transition:opacity 1.2s var(--expo); }
+    .group:hover .veil-bg, .group:focus-visible .veil-bg { opacity:1; }
+    .product-grid:has(.product:hover) .product:not(:hover) { opacity:.42; }
+    .product { transition:opacity 1.1s var(--expo); }
+    @media (hover:none) {
+      .slide { transform:none; } .veil-bg { opacity:1; }
+    }
+
+    /* Custom cursor (fine pointers only) */
+    #cursor-dot, #cursor-ring { position:fixed; top:0; left:0; z-index:200; pointer-events:none; mix-blend-mode:difference; display:none; }
+    #cursor-dot { width:6px; height:6px; border-radius:9999px; background:#fff; }
+    #cursor-ring { width:36px; height:36px; border-radius:9999px; border:1px solid rgba(255,255,255,.9); display:none; align-items:center; justify-content:center; }
+    #cursor-label { color:#fff; opacity:0; }
+    @media (hover:hover) and (pointer:fine) {
+      html.has-cursor, html.has-cursor * { cursor:none !important; }
+      html.has-cursor #cursor-dot { display:block; }
+      html.has-cursor #cursor-ring { display:flex; }
+    }
+
+    /* Marquee */
+    .marquee-group { display:flex; flex-shrink:0; align-items:center; white-space:nowrap; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .grain, .kb-img, .scroll-line::after { animation:none !important; }
+      .slide, .veil-bg, .link-u::after { transition-duration:.01ms !important; }
+    }
+    .reduce #hs-pin { overflow-x:auto; }
+  </style>
+</head>
+
+<body class="bg-ink text-bone font-sans antialiased">
+  <a href="#collection" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[300] focus:bg-bone focus:text-ink focus:px-4 focus:py-2 label">Skip to content</a>
+
+  <!-- Film grain -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"><span id="cursor-label" class="label" style="font-size:9px;letter-spacing:.28em"></span></div>
+
+  <!-- Page-transition curtain -->
+  <div id="curtain" class="fixed inset-0 z-[90] bg-ink-lift pointer-events-none" aria-hidden="true" style="transform:translateY(100%)">
+    <div class="absolute top-0 inset-x-0 h-px bg-champagne"></div>
+  </div>
+
+  <!-- =====================================================
+       1. PRELOADER
+  ====================================================== -->
+  <div id="preloader" class="fixed inset-0 z-[100] bg-ink flex items-center justify-center" role="status" aria-label="Loading">
+    <div id="pre-word" class="font-display font-light uppercase text-bone text-[11vw] md:text-[5.2vw] tracking-[0.3em] pl-[0.3em]">VÉRION</div>
+    <div id="pre-meta" class="absolute bottom-[11vh] left-1/2 -translate-x-1/2 flex flex-col items-center gap-5">
+      <div class="w-[min(300px,60vw)] h-px bg-white/10"><div id="pre-line" class="h-full bg-champagne origin-left" style="transform:scaleX(0)"></div></div>
+      <span id="pre-count" class="label text-ash">000</span>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       2. NAVBAR
+  ====================================================== -->
+  <header id="nav" class="fixed top-0 inset-x-0 z-[70] mix-blend-difference text-white">
+    <div class="grid grid-cols-3 items-center px-6 md:px-10 py-6 md:py-8">
+      <nav class="hidden md:flex gap-9 label nav-group" aria-label="Primary">
+        <a href="#collection" class="link-u" data-magnetic="0.25">Collection</a>
+        <a href="#maison" class="link-u" data-magnetic="0.25">Maison</a>
+        <a href="#atelier" class="link-u" data-magnetic="0.25">Atelier</a>
+      </nav>
+      <button id="burger" class="md:hidden justify-self-start label" aria-expanded="false" aria-controls="menu">Menu</button>
+
+      <a href="#hero" class="justify-self-center font-display font-light uppercase text-[22px] md:text-[28px] tracking-[0.35em] pl-[0.35em]" data-magnetic="0.3" aria-label="Vérion — home">VÉRION</a>
+
+      <div class="justify-self-end flex gap-6 md:gap-9 label nav-group">
+        <button class="link-u hidden md:inline-block" data-magnetic="0.25">Search</button>
+        <button class="link-u" data-magnetic="0.25">Bag (0)</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile fullscreen menu -->
+  <div id="menu" class="fixed inset-0 z-[60] bg-ink flex flex-col justify-center px-8 md:hidden" style="visibility:hidden" aria-hidden="true">
+    <nav class="flex flex-col gap-6" aria-label="Mobile">
+      <a href="#collection" class="menu-link font-display font-light text-[14vw] leading-[1] uppercase">Collection</a>
+      <a href="#maison" class="menu-link font-display font-light text-[14vw] leading-[1] uppercase">Maison</a>
+      <a href="#atelier" class="menu-link font-display font-light text-[14vw] leading-[1] uppercase">Atelier</a>
+      <a href="#newsletter" class="menu-link font-display font-light text-[14vw] leading-[1] uppercase">Newsletter</a>
+    </nav>
+    <div class="absolute bottom-10 left-8 right-8 flex justify-between label text-ash">
+      <span>Search</span><span>Bag (0)</span>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- =====================================================
+         3. HERO
+    ====================================================== -->
+    <section id="hero" class="relative h-screen min-h-[640px] overflow-hidden bg-ink">
+      <!-- background: parallax wrapper > intro-scale wrapper > Ken Burns image -->
+      <div class="hero-bg absolute inset-x-0 -top-[20vh] h-[120vh] will-change-transform">
+        <div class="hero-kb h-full w-full">
+          <img class="kb-img img-grade h-full w-full object-cover" alt="A model in a dark tailored leather coat, photographed in low light"
+               src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2200&q=80" fetchpriority="high">
+        </div>
+      </div>
+      <div class="absolute inset-0 bg-black/50"></div>
+      <div class="absolute inset-0" style="background:radial-gradient(ellipse at center, rgba(0,0,0,0) 35%, rgba(0,0,0,.7) 100%)"></div>
+
+      <div id="hero-content" class="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+        <h1 id="hero-title" class="font-display font-light uppercase text-bone leading-[.85] tracking-[-0.02em] text-[17.5vw]">VÉRION</h1>
+        <p id="hero-tag" class="mt-8 md:mt-10 label text-bone/80">Autumn / Winter 2026</p>
+      </div>
+
+      <div class="hero-fade absolute bottom-8 md:bottom-10 inset-x-6 md:inset-x-10 z-10 flex items-end justify-between label text-bone/60">
+        <span class="hidden md:block">Maison de Cuir</span>
+        <div class="flex flex-col items-center gap-4 mx-auto md:mx-0">
+          <span>Scroll</span>
+          <span class="scroll-line" aria-hidden="true"></span>
+        </div>
+        <span class="hidden md:block">Milano — Paris</span>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         4. MANIFESTO
+    ====================================================== -->
+    <section id="maison" class="relative bg-ink min-h-screen flex items-center justify-center px-6 md:px-10 py-[24vh]">
+      <div class="max-w-6xl text-center">
+        <div class="mx-auto mb-14 h-px w-16 bg-champagne/70"></div>
+        <p id="manifesto-text" class="font-display font-light text-[9.5vw] md:text-[5.4vw] leading-[1.08] tracking-[-0.01em] text-bone">
+          Crafted in silence. Worn in confidence. Every seam is a decision made slowly, by hands that have never needed to hurry.
+        </p>
+        <p class="mt-14 label text-ash">The House of Vérion — Since 1987</p>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         5. FEATURED COLLECTION
+    ====================================================== -->
+    <section id="collection" class="relative bg-ink py-[16vh] md:py-[22vh]">
+      <div class="px-6 md:px-10 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+        <h2 data-reveal="words" class="font-display font-light uppercase leading-[.9] tracking-[-0.02em] text-[15vw] md:text-[9vw]">The Season, Edited</h2>
+        <a href="#signature" class="link-u label self-start md:self-end pb-2" data-magnetic="0.3">View all pieces</a>
+      </div>
+      <div class="mx-6 md:mx-10 mt-10 h-px bg-white/10"></div>
+
+      <div class="product-grid grid grid-cols-12 gap-x-4 md:gap-x-8 gap-y-20 md:gap-y-[12vh] px-6 md:px-10 mt-16 md:mt-28">
+
+        <!-- Product A -->
+        <article class="product col-span-12 md:col-span-5 md:col-start-1" data-speed="0.6">
+          <a href="#" class="group block" data-cursor="View" aria-label="Aurelle Tote, €2,450">
+            <div class="reveal relative aspect-[4/5] overflow-hidden bg-ink-lift">
+              <div class="par absolute inset-x-0 -top-[10%] h-[120%]">
+                <div class="zoom h-full w-full transition-transform duration-[1800ms] ease-expo-out group-hover:scale-[1.07]">
+                  <img class="img-grade h-full w-full object-cover" loading="lazy" alt="Aurelle tote in dark vegetable-tanned leather"
+                       src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1400&q=80">
+                </div>
+              </div>
+              <div class="absolute inset-0 flex flex-col justify-end p-6 md:p-8 pointer-events-none">
+                <div class="veil-bg absolute inset-0"></div>
+                <div class="relative flex items-end justify-between gap-4">
+                  <div><span class="mask-s"><span class="slide font-display font-light text-3xl md:text-4xl">Aurelle Tote</span></span>
+                       <span class="mask-s"><span class="slide d2 label text-bone/70">€2,450</span></span></div>
+                  <span class="mask-s"><span class="slide d3 label text-champagne">Discover</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 flex justify-between label text-ash"><span>Leather Goods</span><span>N° 01</span></div>
+          </a>
+        </article>
+
+        <!-- Product B -->
+        <article class="product col-span-10 col-start-3 md:col-span-4 md:col-start-8 md:mt-[26vh]" data-speed="0.95">
+          <a href="#" class="group block" data-cursor="View" aria-label="Nocturne Coat, €3,900">
+            <div class="reveal relative aspect-[3/4] overflow-hidden bg-ink-lift">
+              <div class="par absolute inset-x-0 -top-[10%] h-[120%]">
+                <div class="zoom h-full w-full transition-transform duration-[1800ms] ease-expo-out group-hover:scale-[1.07]">
+                  <img class="img-grade h-full w-full object-cover" loading="lazy" alt="Nocturne coat, a long black tailored coat"
+                       src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=1400&q=80">
+                </div>
+              </div>
+              <div class="absolute inset-0 flex flex-col justify-end p-6 md:p-8 pointer-events-none">
+                <div class="veil-bg absolute inset-0"></div>
+                <div class="relative flex items-end justify-between gap-4">
+                  <div><span class="mask-s"><span class="slide font-display font-light text-3xl md:text-4xl">Nocturne Coat</span></span>
+                       <span class="mask-s"><span class="slide d2 label text-bone/70">€3,900</span></span></div>
+                  <span class="mask-s"><span class="slide d3 label text-champagne">Discover</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 flex justify-between label text-ash"><span>Tailoring</span><span>N° 02</span></div>
+          </a>
+        </article>
+
+        <!-- Product C -->
+        <article class="product col-span-9 md:col-span-4 md:col-start-2 md:-mt-[10vh]" data-speed="0.8">
+          <a href="#" class="group block" data-cursor="View" aria-label="Sable Shoulder Bag, €1,980">
+            <div class="reveal relative aspect-[3/4] overflow-hidden bg-ink-lift">
+              <div class="par absolute inset-x-0 -top-[10%] h-[120%]">
+                <div class="zoom h-full w-full transition-transform duration-[1800ms] ease-expo-out group-hover:scale-[1.07]">
+                  <img class="img-grade h-full w-full object-cover" loading="lazy" alt="Sable shoulder bag in soft black calf leather"
+                       src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1400&q=80">
+                </div>
+              </div>
+              <div class="absolute inset-0 flex flex-col justify-end p-6 md:p-8 pointer-events-none">
+                <div class="veil-bg absolute inset-0"></div>
+                <div class="relative flex items-end justify-between gap-4">
+                  <div><span class="mask-s"><span class="slide font-display font-light text-3xl md:text-4xl">Sable Shoulder</span></span>
+                       <span class="mask-s"><span class="slide d2 label text-bone/70">€1,980</span></span></div>
+                  <span class="mask-s"><span class="slide d3 label text-champagne">Discover</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 flex justify-between label text-ash"><span>Leather Goods</span><span>N° 03</span></div>
+          </a>
+        </article>
+
+        <!-- Product D -->
+        <article class="product col-span-12 md:col-span-6 md:col-start-7 md:mt-[14vh]" data-speed="1">
+          <a href="#" class="group block" data-cursor="View" aria-label="Meridien Weekender, €2,890">
+            <div class="reveal relative aspect-[5/4] overflow-hidden bg-ink-lift">
+              <div class="par absolute inset-x-0 -top-[10%] h-[120%]">
+                <div class="zoom h-full w-full transition-transform duration-[1800ms] ease-expo-out group-hover:scale-[1.07]">
+                  <img class="img-grade h-full w-full object-cover" loading="lazy" alt="Meridien weekender travel bag"
+                       src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1600&q=80">
+                </div>
+              </div>
+              <div class="absolute inset-0 flex flex-col justify-end p-6 md:p-8 pointer-events-none">
+                <div class="veil-bg absolute inset-0"></div>
+                <div class="relative flex items-end justify-between gap-4">
+                  <div><span class="mask-s"><span class="slide font-display font-light text-3xl md:text-4xl">Meridien Weekender</span></span>
+                       <span class="mask-s"><span class="slide d2 label text-bone/70">€2,890</span></span></div>
+                  <span class="mask-s"><span class="slide d3 label text-champagne">Discover</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 flex justify-between label text-ash"><span>Travel</span><span>N° 04</span></div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         6. HORIZONTAL SCROLL SHOWCASE (pinned)
+    ====================================================== -->
+    <section id="signature" class="relative h-screen bg-ink-soft overflow-hidden" aria-label="Signature pieces">
+      <div id="hs-pin" class="h-full w-full" data-cursor="Drag">
+        <div id="hs-track" class="flex h-full items-center will-change-transform pl-[8vw] md:pl-[6vw]">
+
+          <!-- Intro -->
+          <div class="shrink-0 w-[72vw] md:w-[34vw] pr-[6vw]">
+            <p class="label text-champagne mb-8">Signature Pieces</p>
+            <h2 class="font-display font-light leading-[.95] tracking-[-0.01em] text-[12vw] md:text-[5.4vw]">Made to be kept.</h2>
+            <p class="mt-8 max-w-sm text-ash text-sm leading-relaxed font-light">Three pieces that define the season. Cut once, finished by hand, and meant to outlast it.</p>
+          </div>
+
+          <!-- Panel 01 -->
+          <article class="hs-panel relative shrink-0 h-full w-[92vw] md:w-[64vw] flex items-center">
+            <span class="hs-num outline-num absolute left-0 top-1/2 -translate-y-1/2 font-display font-light leading-none text-[58vw] md:text-[32vw] select-none" aria-hidden="true">01</span>
+            <div class="relative z-10 flex items-center gap-[5vw] pl-[14vw] md:pl-[12vw]">
+              <div class="hs-img relative w-[46vw] md:w-[21vw] aspect-[3/4] overflow-hidden bg-ink-lift">
+                <img class="img-grade absolute inset-0 h-full w-full object-cover" loading="eager" decoding="async" alt="Cendre satchel in smoked leather"
+                     src="https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=1200&q=80">
+              </div>
+              <div class="w-[34vw] md:w-[20vw]">
+                <h3 class="font-display font-light leading-[.95] text-[9vw] md:text-[4.6vw]">Cendre Satchel</h3>
+                <p class="mt-4 text-ash text-[13px] leading-relaxed font-light">Vegetable-tanned calf, edges painted seven times.</p>
+                <p class="mt-6 label">€2,150</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Panel 02 -->
+          <article class="hs-panel relative shrink-0 h-full w-[92vw] md:w-[64vw] flex items-center">
+            <span class="hs-num outline-num absolute left-0 top-1/2 -translate-y-1/2 font-display font-light leading-none text-[58vw] md:text-[32vw] select-none" aria-hidden="true">02</span>
+            <div class="relative z-10 flex items-center gap-[5vw] pl-[14vw] md:pl-[12vw]">
+              <div class="hs-img relative w-[46vw] md:w-[21vw] aspect-[3/4] overflow-hidden bg-ink-lift">
+                <img class="img-grade absolute inset-0 h-full w-full object-cover" loading="eager" decoding="async" alt="Ombre clutch in matte black leather"
+                     src="https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=1200&q=80">
+              </div>
+              <div class="w-[34vw] md:w-[20vw]">
+                <h3 class="font-display font-light leading-[.95] text-[9vw] md:text-[4.6vw]">Ombre Clutch</h3>
+                <p class="mt-4 text-ash text-[13px] leading-relaxed font-light">An evening piece cut from a single hide, no visible hardware.</p>
+                <p class="mt-6 label">€1,240</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Panel 03 -->
+          <article class="hs-panel relative shrink-0 h-full w-[92vw] md:w-[64vw] flex items-center">
+            <span class="hs-num outline-num absolute left-0 top-1/2 -translate-y-1/2 font-display font-light leading-none text-[58vw] md:text-[32vw] select-none" aria-hidden="true">03</span>
+            <div class="relative z-10 flex items-center gap-[5vw] pl-[14vw] md:pl-[12vw]">
+              <div class="hs-img relative w-[46vw] md:w-[21vw] aspect-[3/4] overflow-hidden bg-ink-lift">
+                <img class="img-grade absolute inset-0 h-full w-full object-cover" loading="eager" decoding="async" alt="Verso bucket bag in dark cognac leather"
+                     src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1200&q=80">
+              </div>
+              <div class="w-[34vw] md:w-[20vw]">
+                <h3 class="font-display font-light leading-[.95] text-[9vw] md:text-[4.6vw]">Verso Bucket</h3>
+                <p class="mt-4 text-ash text-[13px] leading-relaxed font-light">Soft, structured and lined in suede. It gets better with wear.</p>
+                <p class="mt-6 label">€1,780</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Outro -->
+          <div class="shrink-0 w-[70vw] md:w-[36vw] pl-[4vw] pr-[10vw]">
+            <p class="font-display font-light leading-[1] text-[10vw] md:text-[3.6vw]">The full collection awaits.</p>
+            <a href="#collection" class="link-u label mt-10 inline-block" data-magnetic="0.3">Explore the collection</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- progress -->
+      <div class="absolute bottom-8 md:bottom-10 inset-x-6 md:inset-x-10 flex items-center gap-6 label text-ash pointer-events-none">
+        <span>Scroll to explore</span>
+        <div class="flex-1 h-px bg-white/10"><div id="hs-progress" class="h-full bg-champagne origin-left" style="transform:scaleX(0)"></div></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         7. CRAFTSMANSHIP / ATELIER
+    ====================================================== -->
+    <section id="atelier" class="relative bg-ink py-[18vh] md:py-[26vh] px-6 md:px-10">
+      <div class="grid grid-cols-12 gap-y-16 md:gap-x-8 items-center">
+        <div class="col-span-12 md:col-span-6">
+          <div class="reveal relative aspect-[4/5] overflow-hidden bg-ink-lift" data-cursor="Discover">
+            <div class="par absolute inset-x-0 -top-[10%] h-[120%]">
+              <img class="img-grade h-full w-full object-cover" loading="lazy" alt="An artisan cutting leather by hand at a workbench"
+                   src="https://images.unsplash.com/photo-1473188588951-666fce8e7c68?auto=format&fit=crop&w=1600&q=80">
+            </div>
+          </div>
+        </div>
+
+        <div id="atelier-copy" class="relative col-span-12 md:col-span-5 md:col-start-8 pl-8 md:pl-14 py-4">
+          <!-- gold line that draws itself on scroll -->
+          <div id="atelier-line" class="absolute left-0 top-0 h-full w-px bg-champagne origin-top" aria-hidden="true"></div>
+
+          <p class="label text-champagne mb-8">The Atelier</p>
+          <h2 data-reveal="words" class="font-display font-light leading-[.98] tracking-[-0.01em] text-[11vw] md:text-[4.6vw]">Made slowly, on purpose.</h2>
+          <p class="mt-8 max-w-md text-ash font-light leading-[1.8] text-[15px]">In a small workshop outside Florence, each piece is cut, stitched and burnished by one pair of hands. No line, no shortcuts. A bag leaves the atelier only when the person who made it says it is finished.</p>
+
+          <div class="relative mt-16 pt-10" id="stats">
+            <div id="stats-line" class="absolute top-0 left-0 h-px w-full bg-champagne/70 origin-left" aria-hidden="true"></div>
+            <dl class="grid grid-cols-3 gap-4">
+              <div><dt class="label text-ash order-2 mt-3">Founded</dt><dd class="font-display font-light text-[9vw] md:text-[3.2vw] leading-none"><span data-count="1987" data-from="1940">1987</span></dd></div>
+              <div><dt class="label text-ash mt-3">Hand-finished</dt><dd class="font-display font-light text-[9vw] md:text-[3.2vw] leading-none"><span data-count="48" data-from="0">48</span>h</dd></div>
+              <div><dt class="label text-ash mt-3">Italian leather</dt><dd class="font-display font-light text-[9vw] md:text-[3.2vw] leading-none"><span data-count="100" data-from="0">100</span>%</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         8. FULL-BLEED CINEMATIC BANNER + MARQUEE
+    ====================================================== -->
+    <section id="banner" class="relative h-screen overflow-hidden bg-ink flex items-center" aria-label="Maison de Cuir">
+      <div class="banner-bg absolute inset-x-0 -top-[15%] h-[130%] will-change-transform">
+        <img class="img-grade h-full w-full object-cover" loading="lazy" alt="Dark studio still life of leather goods"
+             src="https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=2200&q=80">
+      </div>
+      <div class="absolute inset-0 bg-black/60"></div>
+      <div class="absolute inset-0" style="background:radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,.6) 100%)"></div>
+
+      <div id="marquee" class="relative z-10 w-full flex overflow-hidden font-display font-light uppercase leading-none text-[17vw] md:text-[15vw] tracking-[-0.01em]" data-cursor="Slow" aria-label="Vérion — Maison de Cuir">
+        <div class="marquee-group" aria-hidden="true">
+          <span>Vérion</span><span class="mx-[3vw] text-champagne">—</span><span>Maison de Cuir</span><span class="mx-[3vw] text-champagne">—</span>
+        </div>
+        <div class="marquee-group" aria-hidden="true">
+          <span>Vérion</span><span class="mx-[3vw] text-champagne">—</span><span>Maison de Cuir</span><span class="mx-[3vw] text-champagne">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         9. NEWSLETTER
+    ====================================================== -->
+    <section id="newsletter" class="relative bg-ink py-[20vh] md:py-[28vh] px-6 md:px-10">
+      <div class="max-w-[1400px] mx-auto">
+        <p class="label text-champagne mb-10">Newsletter</p>
+        <h2 data-reveal="words" class="font-display font-light uppercase leading-[.9] tracking-[-0.02em] text-[15vw] md:text-[10vw]">Join the Maison</h2>
+
+        <form id="nl-form" class="mt-16 md:mt-24 grid md:grid-cols-12 gap-10 items-end" novalidate>
+          <p class="md:col-span-4 text-ash font-light text-[15px] leading-[1.8] max-w-sm">Private previews, atelier notes and first access to each collection. Sent rarely, written carefully.</p>
+          <div class="md:col-span-6 md:col-start-6 relative group">
+            <label for="nl-email" class="sr-only">Email address</label>
+            <input id="nl-email" type="email" autocomplete="email" placeholder="Your email address" required
+                   class="w-full bg-transparent border-0 border-b border-white/20 rounded-none py-5 font-display font-light text-2xl md:text-4xl text-bone placeholder:text-ash/60 focus:outline-none focus:ring-0" data-cursor="Write">
+            <span class="absolute left-0 bottom-0 h-px w-full bg-champagne origin-left scale-x-0 transition-transform duration-[1200ms] ease-expo-out group-focus-within:scale-x-100" aria-hidden="true"></span>
+          </div>
+          <div class="md:col-span-1 md:col-start-12 md:justify-self-end">
+            <button type="submit" class="label link-u" data-magnetic="0.4">Subscribe</button>
+          </div>
+          <p id="nl-msg" class="md:col-span-12 label text-champagne min-h-[1.4em]" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================
+       10. FOOTER
+  ====================================================== -->
+  <footer class="relative bg-ink overflow-hidden px-6 md:px-10 pt-24 md:pt-32 pb-6 md:pb-8">
+    <div class="h-px bg-white/10 mb-16"></div>
+    <div class="grid grid-cols-2 md:grid-cols-12 gap-y-14 gap-x-8">
+      <div class="col-span-2 md:col-span-4">
+        <p class="font-display font-light text-3xl md:text-4xl leading-tight max-w-xs">Maison de cuir,<br>since 1987.</p>
+      </div>
+      <nav class="md:col-span-2 md:col-start-6" aria-label="Maison">
+        <p class="label text-ash mb-6">Maison</p>
+        <ul class="space-y-3 text-[15px] font-light">
+          <li><a href="#maison" class="link-u">Our story</a></li>
+          <li><a href="#atelier" class="link-u">The atelier</a></li>
+          <li><a href="#collection" class="link-u">Collection</a></li>
+        </ul>
+      </nav>
+      <nav class="md:col-span-2" aria-label="Client care">
+        <p class="label text-ash mb-6">Client care</p>
+        <ul class="space-y-3 text-[15px] font-light">
+          <li><a href="#" class="link-u">Contact</a></li>
+          <li><a href="#" class="link-u">Shipping &amp; returns</a></li>
+          <li><a href="#" class="link-u">Repairs</a></li>
+        </ul>
+      </nav>
+      <nav class="md:col-span-2" aria-label="Social">
+        <p class="label text-ash mb-6">Follow</p>
+        <ul class="space-y-3 text-[15px] font-light">
+          <li><a href="#" class="link-u">Instagram</a></li>
+          <li><a href="#" class="link-u">Pinterest</a></li>
+          <li><a href="#" class="link-u">Journal</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Wordmark, JS fits it to full width -->
+    <div class="mt-24 md:mt-32 w-full overflow-hidden">
+      <div id="wordmark" class="font-display font-light uppercase text-bone whitespace-nowrap inline-block leading-[.8] tracking-[-0.02em]" style="font-size:24vw" aria-label="Vérion">VÉRION</div>
+    </div>
+
+    <div class="mt-10 flex flex-col md:flex-row md:justify-between gap-4 label text-ash">
+      <span>© 2026 Vérion Maison. A fictional house.</span>
+      <span class="flex gap-8"><a href="#" class="link-u">Privacy</a><a href="#" class="link-u">Terms</a></span>
+    </div>
+  </footer>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+
+  <script>
+  (() => {
+    'use strict';
+
+    /* ---------------------------------------------------------
+       HELPERS & GLOBAL STATE
+    --------------------------------------------------------- */
+    const qs  = (s, c = document) => c.querySelector(s);
+    const qsa = (s, c = document) => [...c.querySelectorAll(s)];
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine   = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    if (reduce) document.documentElement.classList.add('reduce');
+
+    /* Broken image? Fall back to the dark panel behind it. */
+    qsa('img').forEach(img => img.addEventListener('error', () => { img.style.opacity = 0; }));
+
+    /* Split text into masked words or characters (translateY 100% → 0 reveal) */
+    function splitText(el, type = 'words') {
+      const text = el.textContent.trim();
+      el.setAttribute('aria-label', text);
+      el.textContent = '';
+      const parts = type === 'chars' ? [...text] : text.split(/\s+/);
+      const inners = [];
+      parts.forEach((p, i) => {
+        const mask = document.createElement('span');
+        mask.className = 'mask'; mask.setAttribute('aria-hidden', 'true');
+        const inner = document.createElement('span');
+        inner.className = type === 'chars' ? 'char' : 'word';
+        inner.textContent = p === ' ' ? '\u00A0' : p;
+        mask.appendChild(inner); el.appendChild(mask);
+        if (type === 'words' && i < parts.length - 1) el.appendChild(document.createTextNode(' '));
+        inners.push(inner);
+      });
+      return inners;
+    }
+    /* Words without masks (for colour-scrubbed manifesto) */
+    function splitPlain(el) {
+      const text = el.textContent.trim();
+      el.setAttribute('aria-label', text);
+      el.textContent = '';
+      return text.split(/\s+/).map((w, i, arr) => {
+        const s = document.createElement('span');
+        s.textContent = w; s.setAttribute('aria-hidden', 'true');
+        el.appendChild(s);
+        if (i < arr.length - 1) el.appendChild(document.createTextNode(' '));
+        return s;
+      });
+    }
+
+    /* ---------------------------------------------------------
+       SMOOTH SCROLL (Lenis ↔ ScrollTrigger)
+    --------------------------------------------------------- */
+    let lenis = null;
+    if (!reduce) {
+      lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(t => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+      lenis.stop();                       // locked until the preloader ends
+    }
+
+    /* ---------------------------------------------------------
+       CUSTOM CURSOR
+    --------------------------------------------------------- */
+    function initCursor() {
+      if (!fine) return;
+      document.documentElement.classList.add('has-cursor');
+      const dot = qs('#cursor-dot'), ring = qs('#cursor-ring'), label = qs('#cursor-label');
+      gsap.set([dot, ring], { xPercent: -50, yPercent: -50, opacity: 0 });
+      const dx = gsap.quickSetter(dot, 'x', 'px'), dy = gsap.quickSetter(dot, 'y', 'px');
+      const rx = gsap.quickTo(ring, 'x', { duration: 0.7, ease: 'power3.out' });
+      const ry = gsap.quickTo(ring, 'y', { duration: 0.7, ease: 'power3.out' });
+      let shown = false;
+
+      window.addEventListener('mousemove', e => {
+        if (!shown) {
+          gsap.set([dot, ring], { x: e.clientX, y: e.clientY });
+          gsap.to([dot, ring], { opacity: 1, duration: 0.8 });
+          shown = true;
+        }
+        dx(e.clientX); dy(e.clientY); rx(e.clientX); ry(e.clientY);
+      }, { passive: true });
+      document.addEventListener('mouseleave', () => gsap.to([dot, ring], { opacity: 0, duration: 0.5 }));
+      document.addEventListener('mouseenter', () => shown && gsap.to([dot, ring], { opacity: 1, duration: 0.5 }));
+
+      const SEL = '[data-cursor], a, button, input';
+      const grow = (size, text) => {
+        gsap.to(ring, { width: size, height: size, duration: 0.9, ease: 'expo.out' });
+        gsap.to(dot, { scale: text ? 0 : 1, duration: 0.5, ease: 'power3.out' });
+        if (text) label.textContent = text;
+        gsap.to(label, { opacity: text ? 1 : 0, duration: 0.6, ease: 'power2.out' });
+      };
+      document.addEventListener('mouseover', e => {
+        const t = e.target.closest && e.target.closest(SEL);
+        if (t) grow(t.dataset.cursor ? 96 : 60, t.dataset.cursor || '');
+      });
+      document.addEventListener('mouseout', e => {
+        const t = e.target.closest && e.target.closest(SEL);
+        if (!t) return;
+        const to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(SEL);
+        if (!to) grow(36, '');
+      });
+    }
+
+    /* ---------------------------------------------------------
+       MAGNETIC ELEMENTS
+    --------------------------------------------------------- */
+    function initMagnetic() {
+      if (!fine || reduce) return;
+      qsa('[data-magnetic]').forEach(el => {
+        const k = parseFloat(el.dataset.magnetic) || 0.35;
+        const xTo = gsap.quickTo(el, 'x', { duration: 1, ease: 'power3.out' });
+        const yTo = gsap.quickTo(el, 'y', { duration: 1, ease: 'power3.out' });
+        el.addEventListener('mousemove', e => {
+          const r = el.getBoundingClientRect();
+          xTo((e.clientX - (r.left + r.width / 2)) * k);
+          yTo((e.clientY - (r.top + r.height / 2)) * k);
+        });
+        el.addEventListener('mouseleave', () => { xTo(0); yTo(0); });
+      });
+    }
+
+    /* ---------------------------------------------------------
+       NAV, MOBILE MENU & PAGE TRANSITIONS
+    --------------------------------------------------------- */
+    let menuOpen = false;
+    const menu = qs('#menu'), burger = qs('#burger');
+    let menuWords = [];
+
+    function openMenu() {
+      menuOpen = true;
+      burger.textContent = 'Close';
+      burger.setAttribute('aria-expanded', 'true');
+      menu.setAttribute('aria-hidden', 'false');
+      lenis && lenis.stop();
+      gsap.set(menu, { visibility: 'visible' });
+      gsap.to(menu, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'expo.inOut' });
+      gsap.fromTo(menuWords, { yPercent: 115 }, { yPercent: 0, duration: 1.3, stagger: 0.08, ease: 'expo.out', delay: 0.35 });
+    }
+    function closeMenu(instant = false) {
+      if (!menuOpen) return;
+      menuOpen = false;
+      burger.textContent = 'Menu';
+      burger.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('aria-hidden', 'true');
+      const done = () => gsap.set(menu, { visibility: 'hidden' });
+      if (instant) { gsap.set(menu, { clipPath: 'inset(0% 0% 100% 0%)' }); done(); }
+      else gsap.to(menu, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.9, ease: 'expo.inOut', onComplete: done });
+      lenis && lenis.start();
+    }
+
+    function initNav() {
+      menuWords = qsa('.menu-link').flatMap(a => splitText(a, 'words'));
+      gsap.set(menu, { clipPath: 'inset(0% 0% 100% 0%)' });
+      burger.addEventListener('click', () => (menuOpen ? closeMenu() : openMenu()));
+      window.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+      /* Anchor navigation with a curtain transition */
+      const curtain = qs('#curtain');
+      let busy = false;
+      const go = target => {
+        if (reduce) { closeMenu(true); target.scrollIntoView(); return; }
+        busy = true;
+        gsap.timeline({ onComplete: () => { busy = false; } })
+          .to(curtain, { yPercent: 0, duration: 0.9, ease: 'power3.inOut' })
+          .add(() => {
+            closeMenu(true);
+            lenis.scrollTo(target, { immediate: true, force: true });
+            ScrollTrigger.update();
+          })
+          .to(curtain, { yPercent: -100, duration: 0.9, ease: 'power3.inOut' }, '+=0.15')
+          .set(curtain, { yPercent: 100 });
+      };
+      gsap.set(curtain, { yPercent: 100 });
+      qsa('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+        e.preventDefault();
+        const href = a.getAttribute('href');
+        if (href === '#' || busy) return;
+        const target = qs(href);
+        if (target) go(target);
+      }));
+    }
+
+    /* ---------------------------------------------------------
+       PRELOADER → HERO INTRO
+    --------------------------------------------------------- */
+    function initHero() {
+      const heroChars = splitText(qs('#hero-title'), 'chars');
+      const tagWords  = splitText(qs('#hero-tag'), 'words');
+
+      if (!reduce) {
+        gsap.set(heroChars, { yPercent: 118 });
+        gsap.set(tagWords,  { yPercent: 118 });
+        gsap.set('.hero-fade', { opacity: 0 });
+        gsap.set('.hero-kb', { scale: 1.25 });
+        gsap.set('#nav', { opacity: 0 });
+
+        /* scroll parallax */
+        gsap.to('.hero-bg', { y: '20vh', ease: 'none',
+          scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+        gsap.to('#hero-content', { yPercent: -14, opacity: 0, ease: 'none',
+          scrollTrigger: { trigger: '#hero', start: 'top top', end: '70% top', scrub: true } });
+      }
+
+      const playHero = () => {
+        gsap.timeline({ defaults: { ease: 'expo.out' } })
+          .to('.hero-kb', { scale: 1, duration: 2.8, ease: 'power3.out' }, 0)
+          .to(heroChars, { yPercent: 0, duration: 1.8, stagger: 0.1 }, 0.1)
+          .to(tagWords, { yPercent: 0, duration: 1.4, stagger: 0.08 }, 0.7)
+          .to('.hero-fade', { opacity: 1, duration: 1.6, ease: 'power2.out' }, 1.1)
+          .to('#nav', { opacity: 1, duration: 1.4, ease: 'power2.out' }, 0.8);
+      };
+
+      /* Preloader */
+      const pre = qs('#preloader');
+      if (reduce) { pre.remove(); return; }
+
+      const chars = splitText(qs('#pre-word'), 'chars');
+      gsap.set(chars, { yPercent: 118 });
+      const counter = qs('#pre-count'), prog = { v: 0 };
+
+      gsap.timeline()
+        .to(chars, { yPercent: 0, duration: 1.4, stagger: 0.14, ease: 'expo.out' }, 0.2)
+        .to('#pre-line', { scaleX: 1, duration: 2.6, ease: 'power2.inOut' }, 0.2)
+        .to(prog, { v: 100, duration: 2.6, ease: 'power2.inOut',
+          onUpdate: () => { counter.textContent = String(Math.round(prog.v)).padStart(3, '0'); } }, 0.2)
+        .to(chars, { yPercent: -118, duration: 1, stagger: 0.06, ease: 'power3.in' }, '+=0.25')
+        .to('#pre-meta', { opacity: 0, duration: 0.6 }, '<')
+        .to(pre, { yPercent: -100, duration: 1.4, ease: 'expo.inOut' }, '-=0.35')
+        .add(() => { lenis && lenis.start(); }, '-=0.5')
+        .add(playHero, '-=1.0')
+        .set(pre, { display: 'none' });
+    }
+
+    /* ---------------------------------------------------------
+       GENERIC TEXT REVEALS
+    --------------------------------------------------------- */
+    function initTextReveals() {
+      qsa('[data-reveal="words"]').forEach(el => {
+        const words = splitText(el, 'words');
+        if (reduce) return;
+        gsap.set(words, { yPercent: 118 });
+        ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true,
+          onEnter: () => gsap.to(words, { yPercent: 0, duration: 1.5, stagger: 0.07, ease: 'expo.out' }) });
+      });
+    }
+
+    /* ---------------------------------------------------------
+       MANIFESTO: scroll-scrubbed gray → white
+    --------------------------------------------------------- */
+    function initManifesto() {
+      const words = splitPlain(qs('#manifesto-text'));
+      if (reduce) return;
+      gsap.set(words, { color: '#3b3b3b' });
+      gsap.to(words, { color: '#f5f2ed', ease: 'none', stagger: 0.12,
+        scrollTrigger: { trigger: '#manifesto-text', start: 'top 78%', end: 'bottom 48%', scrub: true } });
+    }
+
+    /* ---------------------------------------------------------
+       IMAGE REVEALS + PARALLAX (featured grid & atelier)
+    --------------------------------------------------------- */
+    function initImageReveals(scope) {
+      if (reduce) return;
+      qsa(scope + ' .reveal').forEach(reveal => {
+        const trigger = reveal.closest('.product') || reveal;
+        const img = qs('img', reveal);
+        const par = qs('.par', reveal);
+        const speed = parseFloat((reveal.closest('.product') || {}).dataset?.speed || 0.8);
+
+        gsap.set(reveal, { clipPath: 'inset(100% 0% 0% 0%)' });
+        gsap.set(img, { scale: 1.35 });
+        ScrollTrigger.create({ trigger, start: 'top 85%', once: true, onEnter: () => {
+          gsap.to(reveal, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.6, ease: 'expo.out' });
+          gsap.to(img, { scale: 1, duration: 2.2, ease: 'expo.out' });
+        }});
+        /* parallax: each product moves at its own speed (max ±8.3% before the edge shows) */
+        gsap.fromTo(par, { yPercent: -8 * speed }, { yPercent: 8 * speed, ease: 'none',
+          scrollTrigger: { trigger, start: 'top bottom', end: 'bottom top', scrub: true } });
+      });
+    }
+
+    /* ---------------------------------------------------------
+       HORIZONTAL SHOWCASE (pinned)
+    --------------------------------------------------------- */
+    function initShowcase() {
+      if (reduce) return;
+      const track = qs('#hs-track');
+      const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
+
+      const hs = gsap.to(track, { x: () => -dist(), ease: 'none',
+        scrollTrigger: { trigger: '#signature', start: 'top top', end: () => '+=' + dist(),
+          pin: true, scrub: 0.6, anticipatePin: 1, invalidateOnRefresh: true } });
+
+      gsap.to('#hs-progress', { scaleX: 1, ease: 'none',
+        scrollTrigger: { trigger: '#signature', start: 'top top', end: () => '+=' + dist(), scrub: true, invalidateOnRefresh: true } });
+
+      /* giant outlined numbers drift against the scroll */
+      qsa('.hs-num').forEach(n => {
+        gsap.fromTo(n, { xPercent: 14 }, { xPercent: -14, ease: 'none',
+          scrollTrigger: { trigger: n.closest('.hs-panel'), containerAnimation: hs, start: 'left right', end: 'right left', scrub: true } });
+      });
+
+      /* images unveil when the section is first reached */
+      const imgs = qsa('.hs-img');
+      gsap.set(imgs, { clipPath: 'inset(0% 100% 0% 0%)' });
+      ScrollTrigger.create({ trigger: '#signature', start: 'top 65%', once: true,
+        onEnter: () => gsap.to(imgs, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.6, stagger: 0.18, ease: 'expo.out' }) });
+    }
+
+    /* ---------------------------------------------------------
+       ATELIER: gold line + stats
+    --------------------------------------------------------- */
+    function initAtelier() {
+      if (reduce) return;
+      gsap.fromTo('#atelier-line', { scaleY: 0 }, { scaleY: 1, ease: 'none',
+        scrollTrigger: { trigger: '#atelier-copy', start: 'top 75%', end: 'bottom 55%', scrub: true } });
+      gsap.fromTo('#stats-line', { scaleX: 0 }, { scaleX: 1, duration: 2, ease: 'expo.out',
+        scrollTrigger: { trigger: '#stats', start: 'top 88%', once: true } });
+
+      qsa('[data-count]').forEach(el => {
+        const end = +el.dataset.count, o = { v: +el.dataset.from || 0 };
+        el.textContent = Math.round(o.v);
+        ScrollTrigger.create({ trigger: el, start: 'top 92%', once: true, onEnter: () =>
+          gsap.to(o, { v: end, duration: 2.4, ease: 'power3.out', onUpdate: () => { el.textContent = Math.round(o.v); } }) });
+      });
+    }
+
+    /* ---------------------------------------------------------
+       BANNER: parallax + infinite marquee (slows on hover)
+    --------------------------------------------------------- */
+    function initBanner() {
+      if (reduce) return;
+      gsap.fromTo('.banner-bg', { yPercent: -10 }, { yPercent: 10, ease: 'none',
+        scrollTrigger: { trigger: '#banner', start: 'top bottom', end: 'bottom top', scrub: true } });
+
+      const groups = qsa('.marquee-group');
+      const tween = gsap.to(groups, { xPercent: -100, ease: 'none', duration: 45, repeat: -1 });
+      const m = qs('#marquee');
+      m.addEventListener('mouseenter', () => gsap.to(tween, { timeScale: 0.12, duration: 1.4, ease: 'power3.out' }));
+      m.addEventListener('mouseleave', () => gsap.to(tween, { timeScale: 1, duration: 1.4, ease: 'power3.out' }));
+    }
+
+    /* ---------------------------------------------------------
+       NEWSLETTER
+    --------------------------------------------------------- */
+    function initNewsletter() {
+      const form = qs('#nl-form'), input = qs('#nl-email'), msg = qs('#nl-msg');
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const ok = /^\S+@\S+\.\S+$/.test(input.value.trim());
+        msg.textContent = ok ? 'Thank you. A welcome letter is on its way.' : 'Please enter a valid email address.';
+        if (ok) input.value = '';
+        if (!reduce) gsap.fromTo(msg, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' });
+      });
+    }
+
+    /* ---------------------------------------------------------
+       FOOTER WORDMARK (fit to full width + reveal)
+    --------------------------------------------------------- */
+    function initFooter() {
+      const wm = qs('#wordmark');
+      const chars = splitText(wm, 'chars');
+      const fit = () => {
+        wm.style.fontSize = '100px';
+        const w = wm.getBoundingClientRect().width;
+        wm.style.fontSize = (100 * wm.parentElement.clientWidth / w) + 'px';
+      };
+      fit();
+      (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(fit);
+      window.addEventListener('resize', fit);
+      window.addEventListener('load', fit);
+
+      if (reduce) return;
+      gsap.set(chars, { yPercent: 118 });
+      ScrollTrigger.create({ trigger: wm, start: 'top 95%', once: true,
+        onEnter: () => gsap.to(chars, { yPercent: 0, duration: 1.8, stagger: 0.08, ease: 'expo.out' }) });
+    }
+
+    /* ---------------------------------------------------------
+       BOOT (created in DOM order so pin spacing is calculated correctly)
+    --------------------------------------------------------- */
+    initCursor();
+    initNav();
+    initHero();
+    initTextReveals();
+    initManifesto();
+    initImageReveals('#collection');
+    initShowcase();                 // pinned section: must exist before later sections are measured
+    initImageReveals('#atelier');
+    initAtelier();
+    initBanner();
+    initNewsletter();
+    initFooter();
+    initMagnetic();
+
+    window.addEventListener('load', () => ScrollTrigger.refresh());
+  })();
+  </script>
+</body>
+</html>
